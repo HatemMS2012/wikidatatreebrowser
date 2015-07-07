@@ -1,0 +1,161 @@
+{"name": "Q76 (Barack Obama)","children" : [
+{"name":"Q1517713: Illinois Senate", "children" : [
+{"name":"Q18608573: upper house of U.S. state legislature", "children" : [
+{"name":"Q3270264: U.S. state legislature", "children" : [
+{"name":"Q7603708: legislature of a constituent state", "children" : [
+{"name":"Q11204: legislature", "children" : [
+{"name":"Q1752346: assembly"}]},{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy"},
+{"name":"Q43229: organization"}]}]}]},{"name":"Q7603708: legislature of a constituent state", "children" : [
+{"name":"Q11204: legislature", "children" : [
+{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy"},
+{"name":"Q43229: organization"}]}]},{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy", "children" : [
+{"name":"Q7174: democracy"}]},{"name":"Q43229: organization", "children" : [
+{"name":"Q874405: social group"},
+{"name":"Q16334295: group of humans"}]}]}]}]}]},{"name":"Q170018: 110th United States Congress", "children" : [
+]},{"name":"Q5: human", "children" : [
+{"name":"Q215627: person", "children" : [
+{"name":"Q18336849: item with given name property", "children" : [
+{"name":"Q16222597: Wikidata item", "children" : [
+{"name":"Q16354757: Wikidata Data Model", "children" : [
+{"name":"Q1172480: data model"},
+{"name":"Q16354758: Wikibase"}]},{"name":"Q17442446: Wikimedia internal stuff", "children" : [
+{"name":"Q15474042: MediaWiki page"}]},{"name":"Q2013: Wikidata", "children" : [
+{"name":"Q638153: semantic wiki"},
+{"name":"Q14827288: Wikimedia project"},
+{"name":"Q7094076: online database"},
+{"name":"Q593744: knowledge base"}]}]}]},{"name":"Q830077: subject", "children" : [
+{"name":"Q203872: being", "children" : [
+{"name":"Q673661: abstraction", "children" : [
+{"name":"Q151885: concept"}]},{"name":"Q35120: entity", "children" : [
+{"name":"Q468777: existence"}]}]}]}]},{"name":"Q16521: taxon", "children" : [
+{"name":"Q16889133: class", "children" : [
+{"name":"Q5127848: class", "children" : [
+{"name":"Q151885: concept", "children" : [
+{"name":"Q7184903: abstract object"}]},{"name":"Q35120: entity", "children" : [
+{"name":"Q468777: existence"}]},{"name":"Q19478619: metaclass", "children" : [
+{"name":"Q151885: concept"},
+{"name":"Q3478658: Knowledge representation and reasoning"}]}]},{"name":"Q5962346: classification", "children" : [
+{"name":"Q450107: Systematics", "children" : [
+{"name":"Q4167410: Wikimedia disambiguation page"}]},{"name":"Q1929761: knowledge organization", "children" : [
+{"name":"Q199655: library science"}]},{"name":"Q199655: library science", "children" : [
+{"name":"Q1391143: special field"},
+{"name":"Q11862829: academic discipline"},
+{"name":"Q856625: Branch of libraries"},
+{"name":"Q16387: information science"}]},{"name":"Q309100: planning", "children" : [
+{"name":"Q43229: organization"},
+{"name":"Q205961: skill"}]},{"name":"Q201456: directory", "children" : [
+{"name":"Q12148816: enumeration"},
+{"name":"Q49848: document"}]}]},{"name":"Q19361238: metaclass", "children" : [
+{"name":"Q19478619: metaclass", "children" : [
+{"name":"Q151885: concept"},
+{"name":"Q3478658: Knowledge representation and reasoning"}]},{"name":"Q2013: Wikidata", "children" : [
+{"name":"Q638153: semantic wiki"},
+{"name":"Q14827288: Wikimedia project"},
+{"name":"Q7094076: online database"},
+{"name":"Q593744: knowledge base"}]}]}]},{"name":"Q16889133: class", "children" : [
+{"name":"Q5127848: class", "children" : [
+{"name":"Q151885: concept", "children" : [
+{"name":"Q7184903: abstract object"}]},{"name":"Q35120: entity", "children" : [
+{"name":"Q468777: existence"}]},{"name":"Q19478619: metaclass", "children" : [
+{"name":"Q151885: concept"},
+{"name":"Q3478658: Knowledge representation and reasoning"}]}]},{"name":"Q5962346: classification", "children" : [
+{"name":"Q450107: Systematics", "children" : [
+{"name":"Q4167410: Wikimedia disambiguation page"}]},{"name":"Q1929761: knowledge organization", "children" : [
+{"name":"Q199655: library science"}]},{"name":"Q199655: library science", "children" : [
+{"name":"Q1391143: special field"},
+{"name":"Q11862829: academic discipline"},
+{"name":"Q856625: Branch of libraries"},
+{"name":"Q16387: information science"}]},{"name":"Q309100: planning", "children" : [
+{"name":"Q43229: organization"},
+{"name":"Q205961: skill"}]},{"name":"Q201456: directory", "children" : [
+{"name":"Q12148816: enumeration"},
+{"name":"Q49848: document"}]}]},{"name":"Q19361238: metaclass", "children" : [
+{"name":"Q19478619: metaclass", "children" : [
+{"name":"Q151885: concept"},
+{"name":"Q3478658: Knowledge representation and reasoning"}]},{"name":"Q2013: Wikidata", "children" : [
+{"name":"Q638153: semantic wiki"},
+{"name":"Q14827288: Wikimedia project"},
+{"name":"Q7094076: online database"},
+{"name":"Q593744: knowledge base"}]}]}]}]},{"name":"Q164509: omnivore", "children" : [
+{"name":"Q729: animal", "children" : [
+{"name":"Q16521: taxon", "children" : [
+{"name":"Q16889133: class", "children" : [
+{"name":"Q19361238: metaclass"},
+{"name":"Q5962346: classification"},
+{"name":"Q5127848: class"}]},{"name":"Q16889133: class", "children" : [
+{"name":"Q19361238: metaclass"},
+{"name":"Q5962346: classification"},
+{"name":"Q5127848: class"}]}]}]}]},{"name":"Q18336849: item with given name property", "children" : [
+{"name":"Q16222597: Wikidata item", "children" : [
+{"name":"Q16354757: Wikidata Data Model", "children" : [
+{"name":"Q16354758: Wikibase", "children" : [
+{"name":"Q6805426: MediaWiki extension"}]},{"name":"Q1172480: data model", "children" : [
+{"name":"Q1979154: model"}]}]},{"name":"Q17442446: Wikimedia internal stuff", "children" : [
+{"name":"Q15474042: MediaWiki page", "children" : [
+{"name":"Q15633582: MediaWiki site"},
+{"name":"Q1650567: dynamic web page"}]}]},{"name":"Q2013: Wikidata", "children" : [
+{"name":"Q638153: semantic wiki", "children" : [
+{"name":"Q6686945: wiki software"},
+{"name":"Q171: wiki"}]},{"name":"Q14827288: Wikimedia project", "children" : [
+{"name":"Q15545584: collaborative work"},
+{"name":"Q170584: project"}]},{"name":"Q7094076: online database", "children" : [
+{"name":"Q35127: website"},
+{"name":"Q8513: database"}]},{"name":"Q593744: knowledge base", "children" : [
+{"name":"Q8513: database"}]}]}]}]},{"name":"Q171283: Homo", "children" : [
+{"name":"Q16521: taxon", "children" : [
+{"name":"Q16889133: class", "children" : [
+{"name":"Q5127848: class", "children" : [
+{"name":"Q19478619: metaclass"},
+{"name":"Q151885: concept"},
+{"name":"Q35120: entity"}]},{"name":"Q5962346: classification", "children" : [
+{"name":"Q309100: planning"},
+{"name":"Q1929761: knowledge organization"},
+{"name":"Q450107: Systematics"},
+{"name":"Q201456: directory"},
+{"name":"Q199655: library science"}]},{"name":"Q19361238: metaclass", "children" : [
+{"name":"Q2013: Wikidata"},
+{"name":"Q19478619: metaclass"}]}]},{"name":"Q16889133: class", "children" : [
+{"name":"Q5127848: class", "children" : [
+{"name":"Q19478619: metaclass"},
+{"name":"Q151885: concept"},
+{"name":"Q35120: entity"}]},{"name":"Q5962346: classification", "children" : [
+{"name":"Q309100: planning"},
+{"name":"Q1929761: knowledge organization"},
+{"name":"Q450107: Systematics"},
+{"name":"Q201456: directory"},
+{"name":"Q199655: library science"}]},{"name":"Q19361238: metaclass", "children" : [
+{"name":"Q2013: Wikidata"},
+{"name":"Q19478619: metaclass"}]}]}]}]},{"name":"Q1156970: humanity", "children" : [
+]}]},{"name":"Q2015366: Congressional Black Caucus", "children" : [
+{"name":"Q2943071: congressional caucus", "children" : [
+{"name":"Q751892: caucus", "children" : [
+]}]}]},{"name":"Q168778: 109th United States Congress", "children" : [
+]},{"name":"Q66096: United States Senate", "children" : [
+{"name":"Q11268: United States Congress", "children" : [
+{"name":"Q48525: Federal government of the United States", "children" : [
+{"name":"Q15061723: government of the United States", "children" : [
+]},{"name":"Q1006644: federal government", "children" : [
+{"name":"Q7188: government", "children" : [
+{"name":"Q35798: executive"},
+{"name":"Q7210356: political organization"},
+{"name":"Q58778: system"}]}]}]},{"name":"Q189445: bicameral legislature", "children" : [
+{"name":"Q11204: legislature", "children" : [
+{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy"},
+{"name":"Q43229: organization"}]}]}]}]},{"name":"Q637846: upper house", "children" : [
+{"name":"Q189445: bicameral legislature", "children" : [
+{"name":"Q11204: legislature", "children" : [
+{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy"},
+{"name":"Q43229: organization"}]}]}]},{"name":"Q10553309: legislative house", "children" : [
+{"name":"Q11204: legislature", "children" : [
+{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy"},
+{"name":"Q43229: organization"}]}]},{"name":"Q1752346: assembly", "children" : [
+{"name":"Q284289: Deliberative democracy", "children" : [
+{"name":"Q7174: democracy"}]},{"name":"Q43229: organization", "children" : [
+{"name":"Q874405: social group"},
+{"name":"Q16334295: group of humans"}]}]}]}]}]}]}

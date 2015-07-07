@@ -1,0 +1,19 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET /																controllers.Application.index()
+POST    /signup                  									controllers.Application.submit()
+GET     /d3prop/:itemId/:lang/:depth/:props                    controllers.Application.getd3TreeProp(itemId:String, lang:String, depth:Integer, props:String)
+GET     /d3noprop/:itemId/:lang/:depth                          controllers.Application.getd3TreeNoProp(itemId:String, lang:String, depth:Integer)
+GET     /visnoprop/:itemId/:lang/:depth                        controllers.Application.getVisTree(itemId:String, lang:String, depth:Integer)
+GET     /visprop/:itemId/:lang/:depth/:props                controllers.Application.getVisTreeProp(itemId:String, lang:String, depth:Integer, props:String)
+
+
+
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
