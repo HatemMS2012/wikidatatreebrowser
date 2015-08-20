@@ -1,12 +1,3 @@
-{"name": "Q183 (Germany)","children" : [
-{"name":"Q619610: social state", "children" : [
-]},{"name":"Q3624078: sovereign state", "children" : [
-{"name":"Q6054724: International legal system"}]},{"name":"Q43702: federation", "children" : [
-]},{"name":"Q7270: republic", "children" : [
-{"name":"Q1307214: form of rule"}]},{"name":"Q4209223: legal state", "children" : [
-]},{"name":"Q160016: member state of the United Nations", "children" : [
-{"name":"Q13406463: Wikimedia list article"}]},{"name":"Q7275: state", "children" : [
-]},{"name":"Q185441: member state of the European Union", "children" : [
-{"name":"Q13406463: Wikimedia list article"}]},{"name":"Q6256: country", "children" : [
-{"name":"Q15617994: designation for an administrative territorial entity"}]},{"name":"Q6505795: member state of the Council of Europe", "children" : [
-]}]}
+{"name": "Q25162 (Fabio Fazio)","children" : [
+{"name":"Q19616: RAI"},
+{"name":"Q5: human"}]}

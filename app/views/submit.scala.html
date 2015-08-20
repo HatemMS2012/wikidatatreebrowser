@@ -1,3 +1,4 @@
+@(languages:java.util.List[String])
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -93,8 +94,20 @@
 		<div class="control-group">
   		 <label class="control-label" for="language">Language</label>
     		<div class="controls">
-		 		<input type="text" name="language"  placeholder="e.g.: en, fr, de" >
+		 		
+		 		<select name="language">
+				 	@for(lang <- languages) {
+				 	 
+				 	 	<option value="@lang">@lang</option>
+		  				
+					} 
+		  		</select>
+		 		
 			</div>
+			
+			
+			  
+		  
 		</div>	
 		<div class="control-group">
   		<label class="control-label" for="depth">Depth</label>
@@ -104,10 +117,15 @@
 			</div>	
   		</div>	
 		<div class="control-group">
-		<label class="control-label" for="props"> Property IDs (Comma separated)</label>
+		<label class="control-label" for="props"> Property IDs</label>
 		
 			<div class="controls">
-				<input type="text" name="props"  placeholder="Comma separated, e.g., P31,P279">
+			 <select name="props">
+		      <option value="propStructure">Property Structure</option>
+		      <option value="classStructure">Item Structure</option>
+		      <option value="all">All</option>
+		  </select>
+				<!-- <input type="text" name="props"  placeholder="Comma separated, e.g., P31,P279">-->
 		  </div>
 		</div>
 		<div class="control-group">
@@ -121,6 +139,10 @@
 		</div>
 		<div class="control-group">
 		<div class="controls">
+		 <label class="checkbox">
+      			  
+      		<input name="instance" type="checkbox"> Instance </input>
+   		   </label>
 			<input class="btn btn-large btn-success" type="submit" value="Search" />
 		<div>	
 		</div>

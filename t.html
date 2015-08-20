@@ -1,0 +1,223 @@
+@(code : String, id:String, label:String, desc: String, arg1:String, arg2:String,frame:hms.alignment.data.Frame, matchingRoleArg1:String, matchingRoleArg2:String) 
+
+<!doctype html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <title>Wikidata Visualizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Hatem Mousselly Sergieh">
+
+
+	<link rel="stylesheet" href="@routes.Assets.versioned("bootstrap/css2/bootstrap.css")">
+  	<script src="@routes.Assets.versioned("bootstrap/js/jquery.min.js")"></script>
+  	<script src="@routes.Assets.versioned("bootstrap/css2/bootstrap.min.js")"></script>
+    <!-- Le styles -->
+    <link href="@routes.Assets.versioned("bootstrap/css/bootstrap.css")" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+      }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+    </style>
+    <link href="@routes.Assets.versioned("bootstrap/css/bootstrap-responsive.css")" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+                                   
+                                   
+  <title>Tree View</title>
+
+  <style type="text/css">
+    body {
+      font: 10pt sans;
+    }
+    #mynetwork {
+      width: 800px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+
+  
+  <script type="text/javascript" src='@routes.Assets.versioned("javascripts/vis.js")'></script>
+  <link href='@routes.Assets.versioned("stylesheets/vis.css")' rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+  
+    var network = null;
+    var layoutMethod = "hubsize";
+
+    function destroy() {
+      if (network !== null) {
+        network.destroy();
+        network = null;
+      }
+    }
+
+    function draw() {
+      destroy();
+
+    	//output from my visual code generator
+    	@Html(code)
+    	
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+
+      var options = {
+        layout: {
+          hierarchical: {
+            sortMethod: "directed"
+          }
+        },
+        edges: {
+          smooth: true,
+          arrows: {to : true },
+		  physics : false
+        }
+      };
+      network = new vis.Network(container, data, options);
+    }
+
+  </script>
+
+</head>
+
+<body onload="draw();">
+	
+	<div class="container-fluid">
+
+	      <div class="row-fluid">
+	        <div class="span12">
+	        <ul class="nav nav-pills pull-left">
+	          <li class="active"><a href="@routes.Application.index()">Home</a></li>
+	          <li><a href="https://www.ukp.tu-darmstadt.de/people/postdoctoral-researchers/dr-hatem-mousselly-sergieh/"  target="_blank">About</a></li>
+	          <li><a href="#">Contact</a></li>
+	        </ul>
+	      </div>
+	  </div>
+	      
+	  <hr>
+	  <div class="container-fluid">
+  			<div class="row-fluid">
+				    <div class="span3">
+					  <div class="panel-group" id="accordion">
+					    <div class="panel panel-default">
+					      <div class="panel-heading">
+					        <h4 class="panel-title">
+					          <a data-toggle="collapse" href="#collapse1">Wikidata Property</a>
+					        </h4>
+					      </div>
+					      <div id="collapse1" class="panel-collapse collapse in">
+					       	 <dl class="dl-vertical">
+							  					<dt><h4>Label</h4></dt>
+							  					<dd><blockquote><p class="text-success"><em><a href="https://www.wikidata.org/wiki/Property:@id" target = "_blank"> @label </a></em></p></blockquote></dd>
+							  					<dt><h4>Description</h4></dt>
+							  					<dd><blockquote><p class="text-success"><em>@desc</em></p></blockquote></dd>
+							  					<dt><h4>ARG1 Types</h4></dt>
+							  					
+							  					<dd><blockquote><p class="text-info"> @Html(arg1.replace("{","").replace("}","").replace("], ","]<br>"))</p></blockquote></dd>
+							  					<dt><h4>ARG2 Types</h4></dt>
+							  							  					
+							  					<dd><blockquote><p class="text-info">@Html( arg2.replace("{","").replace("}","").replace("], ","]<br>"))</p></blockquote></dd>
+							  					
+											</dl>
+							 </div>
+					      </div>
+					    </div>
+					    <div class="panel panel-default">
+					      <div class="panel-heading">
+					        <h4 class="panel-title">
+					          <a data-toggle="collapse" href="#collapse2">FrameNet Correspondence </a>
+					        </h4>
+					      </div>
+					      <div id="collapse2" class="panel-collapse collapse">
+					        <div class="panel-body"
+					        <dl class="dl-vertical">
+					       <p> FrameNet Correspondence<a href="https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex" target = "_blank"> @frame.getLabel()</p> 
+												<dt><h4>Definition</h4></dt>
+							  					<dd><blockquote><p class="text-success"><em>@frame.getDefinition().substring(0,frame.getDefinition().indexOf("."))...</em></p></blockquote></dd>
+							  					<dt><h4>ARG1 Roles</h4></dt>
+							  					<dd><blockquote><p class="text-info"><em>@matchingRoleArg1</em></p></blockquote></dd>
+							  					<dt><h4>ARG2 Roles</h4></dt>
+							  					<dd><blockquote><p class="text-info"><em>@matchingRoleArg2</em></p></blockquote></dd>
+							  				<dl>	
+							</div>
+					      </div>
+					    </div>
+					    <div class="panel panel-default">
+					      <div class="panel-heading">
+					        <h4 class="panel-title">
+					          <a data-toggle="collapse" href="#collapse3">Collapsible Group 3</a>
+					        </h4>
+					      </div>
+					      <div id="collapse3" class="panel-collapse collapse">
+					        <div class="panel-body">Lorem ipsum </div>
+					      </div>
+					    </div>
+					  </div> 
+					</div>
+				    </div>
+				    
+
+				    
+		   		 <div class="span8">
+		    		 <div class = "jumbotron" id="mynetwork"></div>
+		   		 </div>
+		   		 
+  			</div>
+	</div>
+
+					
+</div>
+
+	
+</body>
+</html>
