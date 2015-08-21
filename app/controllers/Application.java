@@ -119,7 +119,25 @@ public class Application extends Controller {
 		  
 		  String entityId =  dynamicForm.get("entityId").toUpperCase().trim();
 		  
-		
+		  //Check if the entity is a valid wikidata item
+		  String res = JacksonDBAPI.getItemLabel(entityId, "en");
+		 
+		  if(res== null) {
+			  
+			  //May be the user entered a label instead of id
+			  
+			  List<String> candidates = JacksonDBAPI.getItemByLable(entityId, "en");
+			  
+			  if(candidates.size() > 0){
+				  
+				  entityId = candidates.get(0);
+			  }
+			  else{
+				  return ok("Wikidata does not contain such entity [" + entityId + "]");
+
+			  }
+
+		  }
 		  
 		  if(entityId.startsWith("P")){
 			  
@@ -138,8 +156,10 @@ public class Application extends Controller {
 			  Integer.valueOf(dynamicForm.get("depth").toLowerCase().trim());
 		  }
 		  catch(NumberFormatException e){
+			  
 			  return ok("Depth must be a number");
 		  }
+		
 		  int depth =  Integer.valueOf(dynamicForm.get("depth").toLowerCase().trim());
 		  
 		  String propsStr =  dynamicForm.get("props");
@@ -159,12 +179,11 @@ public class Application extends Controller {
 		  String visMethod =  dynamicForm.get("visMethod").toLowerCase().trim();
 		  boolean useInstance = false;
 		  
-		  //Check if the entity is a valid wikidata item
-		  String res = JacksonDBAPI.getItemLabel(entityId, "en");
-		  if(res== null) {
-			  return ok("Wikidata does not contain such entity [" + entityId + "]");
-
-		  }
+		
+		
+		  
+		  
+		  
 		  if(dynamicForm.get("instance")!=null){
 			  useInstance = true;
 			  

@@ -168,10 +168,15 @@ arrows: {to : true },
 								<dt><h5>Description</h5></dt>
 								<dd><p><em>@desc</em></p></dd>
 								-->
+								
 								<dt><h5>ARG1 Types</h5></dt>
-								<dd><p> @Html(arg1.replace("{","").replace("}","").replace("], ","]<br>"))</p></dd>
+								@if(arg1!=null){
+									<dd><p> @Html(arg1.replace("{","").replace("}","").replace("], ","]<br>"))</p></dd>
+								}
 								<dt><h5>ARG2 Types</h5></dt>
-								<dd><p>@Html( arg2.replace("{","").replace("}","").replace("], ","]<br>"))</p></dd>
+								@if(arg2!=null){
+									<dd><p>@Html( arg2.replace("{","").replace("}","").replace("], ","]<br>"))</p></dd>
+								}
 							</dl>
 						</div>
 					</div>
