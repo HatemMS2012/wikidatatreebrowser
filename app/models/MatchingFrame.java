@@ -1,20 +1,22 @@
 package models;
 
-import hms.alignment.FrameNetAPI;
-import hms.alignment.data.Frame;
-import hms.alignment.data.SemanticRole;
 
-import java.util.List;
 
 public class MatchingFrame {
 	
+	
 	private String frameId;
 	private String frameLabel;
+	private double frameScore ;
 	private String frameDescription;
 	private String arg1;
+	private double arg1_score;
 	private String arg1Description;
 	private String arg2Description;
 	private String arg2;
+	private double arg2_score;
+	
+	
 	private int rank;
 	public String getFrameId() {
 		return frameId;
@@ -66,24 +68,25 @@ public class MatchingFrame {
 	}
 	
 	
-	public String getRoleDescription(String roleName){
-		
-		 
-		Frame fullFrame = FrameNetAPI.getFrameFullData(frameId);
 
-		List<SemanticRole> roles = fullFrame.getRoles();
-		  
-		  for(SemanticRole r : roles ){
-			  if(r.getRole().equals(roleName.trim())){
-				  return r.getDefnition();
-			  }
-		  }
-		
-		return null;
-		
+	public double getFrameScore() {
+		return frameScore;
 	}
-	
-	
-	
+	public void setFrameScore(double frameScore) {
+		this.frameScore = frameScore;
+	}
+	public double getArg1_score() {
+		return arg1_score;
+	}
+	public void setArg1_score(double arg1_score) {
+		this.arg1_score = arg1_score;
+	}
+	public double getArg2_score() {
+		return arg2_score;
+	}
+	public void setArg2_score(double arg2_score) {
+		this.arg2_score = arg2_score;
+	}
+
 
 }

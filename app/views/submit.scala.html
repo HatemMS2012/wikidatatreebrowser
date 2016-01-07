@@ -83,7 +83,7 @@
       </div>
  	
  	  <hr>
-	<form class="form-horizontal" method="post" action="@routes.Application.submit()">
+	<form class="form-horizontal" method="post" action="@routes.Application.searchWikiData()">
 		<div class="control-group">
 		 <label class="control-label" for="entityId"> Entity ID:</label>
     		<div class="controls">
@@ -112,7 +112,7 @@
 		<div class="control-group">
   		<label class="control-label" for="depth">Depth</label>
     		<div class="controls">
-		 		<input type="text" name="depth"  placeholder="Tree max length" >
+		 		<input type="text" name="depth"  placeholder="Tree max length" value = 1>
 		 	 
 			</div>	
   		</div>	
@@ -132,8 +132,9 @@
   		<label class="control-label" for="visMethod">Visualization Method</label>	
 		<div class="controls">
 		  <select name="visMethod">
+		    <option value="vis">vis</option>
 		      <option value="d3">d3</option>
-		      <option value="vis">vis</option>
+		    
 		  </select>
 	    </div>
 		</div>

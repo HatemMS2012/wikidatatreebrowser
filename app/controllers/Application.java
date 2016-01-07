@@ -1,305 +1,368 @@
 package controllers;
 
+import static play.data.Form.form;
+import framenet.FrameNetAPI;
+import hms.alignment.framenet.xml.FrameNetXMLAPI;
+import hms.wikidata.dbimport.JacksonDBAPI;
+import hms.wikidata.graph.Visualizer;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-
-import com.google.common.io.Files;
-
-import models.EntityEnrty;
+import models.SearchFormEntity;
 import models.MatchingFrame;
-import models.User;
-import hms.alignment.FrameNetAPI;
-import hms.alignment.data.Frame;
-import hms.alignment.data.SemanticRole;
-import hms.wikidata.dbimport.JacksonDBAPI;
-import hms.wikidata.dbimport.WikidataToRDB;
-import hms.wikidata.graph.Visualizer;
-import hms.wikidata.model.ExperimentalArgTypes;
-import play.*;
+import models.WDEntity;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import play.data.DynamicForm;
 import play.data.Form;
-import play.mvc.*;
-import views.html.*;
-import static play.data.Form.*;
-
+import play.mvc.Controller;
+import play.mvc.Result;
+import database.WDFNMAppingDBAPI;
+import views.html.*; //very important to get the project compiled
 
 public class Application extends Controller {
-	
-	
-	
-
-		
-	public static List<String> availableLanguage = JacksonDBAPI.getWikidataLanguages();
-	
-	  public Result getd3TreeProp(String itemId,String lang, int depth,String properties,boolean useInstance) {
-
-			Set<String> targetProperties = new HashSet<String>();
-			String[] propArr = properties.split(",");
-			for(String prop:propArr){
-				targetProperties.add(prop);	
-			}
-			String repsonse =	Visualizer.generateTreeForEntity(itemId, depth, lang, targetProperties,useInstance);
-			
-			if(repsonse==null){
-				return ok("No data about: " + itemId);
-			}
-			
-			try{
-				FileUtils.writeStringToFile( new File("public/javascripts/flare.json"), repsonse,"UTF-8");
-			}
-			catch(IOException e){
-				e.printStackTrace();
-			}
-		  
-		  return ok(tree.render(repsonse));
-	  }
-	  
-	  public Result getd3TreeNoProp(String itemId,String lang, int depth, boolean useInstance) {
-		  
-			String repsonse = Visualizer.generateTreeForEntity(itemId, depth, lang, null,useInstance);
-			if(repsonse==null){
-				return ok("No data about: " + itemId);
-			}
-			
-			try{
-				FileUtils.writeStringToFile( new File("public/javascripts/flare.json"), repsonse,"UTF-8");
-			}
-			catch(IOException e){
-				e.printStackTrace();
-			}
-		 
-		  return ok(tree.render(repsonse));
-	  }
-	  
-	  public Result getVisTree(String itemId,String lang, int depth,boolean useInstance) {
-		  
-
-			String repsonse = Visualizer.generateCodeForVis(itemId, depth, lang, null,useInstance);
-			if(repsonse==null){
-				return ok("No data about: " + itemId);
-			}
-				
-			return ok(treeVis.render(repsonse.replace("\"", ""),PROPETY_ARG_TYPES.getId(),PROPETY_ARG_TYPES.getLabel(), PROPETY_ARG_TYPES.getDescription(), PROPETY_ARG_TYPES.getTypeArg1(), PROPETY_ARG_TYPES.getTypeArg2(),propMatchingFrames));
-	  }
-	  
-	  public Result getVisTreeProp(String itemId,String lang, int depth,String properties,boolean useInstance) {
-		  
-
-		  Set<String> targetProperties = new HashSet<String>();
-			String[] propArr = properties.split(",");
-			for(String prop:propArr){
-				targetProperties.add(prop);	
-			}
-			String repsonse =  Visualizer.generateCodeForVis(itemId, depth, lang, targetProperties,useInstance);
-			
-			if(repsonse==null){
-				return ok("No data about: " + itemId);
-			}
-			
-			return ok(treeVis.render(repsonse.replace("\"", ""),PROPETY_ARG_TYPES.getId(),PROPETY_ARG_TYPES.getLabel(), PROPETY_ARG_TYPES.getDescription(), PROPETY_ARG_TYPES.getTypeArg1(), PROPETY_ARG_TYPES.getTypeArg2(),propMatchingFrames));
-	  }
-	  
-	  public static Form<EntityEnrty> searchForm = form(EntityEnrty.class);
 
 	
-	  static ExperimentalArgTypes PROPETY_ARG_TYPES = null;
-	  static List<MatchingFrame> propMatchingFrames = null;
-	  static final String frameMatchingSimMethod = "WN"; //stemoverlap
-	  
-	  public Result submit(){
-		  
-		  
-		  DynamicForm dynamicForm = form().bindFromRequest();
-		  
-		  String entityId =  dynamicForm.get("entityId").toUpperCase().trim();
-		  
-		  //Check if the entity is a valid wikidata item
-		  String res = JacksonDBAPI.getItemLabel(entityId, "en");
-		 
-		  if(res== null) {
-			  
-			  //May be the user entered a label instead of id
-			  
-			  List<String> candidates = JacksonDBAPI.getItemByLable(entityId, "en");
-			  
-			  if(candidates.size() > 0){
-				  
-				  entityId = candidates.get(0);
-			  }
-			  else{
-				  return ok("Wikidata does not contain such entity [" + entityId + "]");
-
-			  }
-
-		  }
-		  
-		  if(entityId.startsWith("P")){
-			  
-			  //Get the experimental argument types
-			 PROPETY_ARG_TYPES = JacksonDBAPI.getExperimentalArgTypes(entityId);
-			 
-			 //Matching Frame
-			 
-			 propMatchingFrames = getMatchingFrames(entityId,frameMatchingSimMethod);
-			 
-			  
-		  }
-		  String lang =  dynamicForm.get("language").toLowerCase().trim();
-		  
-		  try{
-			  Integer.valueOf(dynamicForm.get("depth").toLowerCase().trim());
-		  }
-		  catch(NumberFormatException e){
-			  
-			  return ok("Depth must be a number");
-		  }
-		
-		  int depth =  Integer.valueOf(dynamicForm.get("depth").toLowerCase().trim());
-		  
-		  String propsStr =  dynamicForm.get("props");
-		 
-		  if(propsStr.equals("propStructure")){
-			  propsStr = propertyStructureAttributes;
-		  }
-		  else if(propsStr.equals("classStructure")){
-			  propsStr = itemStructureAttributes;
-		  }	
-		  else if(propsStr.equals("all")){
-			  
-			  propsStr = null;
-		  }
-		 
-		  		  
-		  String visMethod =  dynamicForm.get("visMethod").toLowerCase().trim();
-		  boolean useInstance = false;
-		  
-		
-		
-		  
-		  
-		  
-		  if(dynamicForm.get("instance")!=null){
-			  useInstance = true;
-			  
-			  if(entityId.contains("Q")){
-				
-				  return ok("You can only use properties when the instance box is checked");
-			  }
-
-		  }
-		  		
-		  if(propsStr == null ||propsStr.equals("") || propsStr.length() <= 1){
-				if(visMethod.equals("d3")){
-					return getd3TreeNoProp(entityId, lang, depth,useInstance);
-				}	
-				
-				else {
-					return getVisTree(entityId, lang, depth,useInstance);
-				}
-			
-		  }
-		  else{
-			  
-			  if(visMethod.equals("d3")){
-				  return getd3TreeProp(entityId, lang, depth, propsStr,useInstance);
-			  }
-			  else{
-				  return getVisTreeProp(entityId, lang, depth, propsStr,useInstance);
-			  }
-			}
-			
-		  
+	private static WDEntity searchedEntity;
 	
-	  }
-
-
-	  /**
-	   * Get frames matching a given WD property
-	   * @param entityId
-	   * @param method
-	   * @return
-	   */
-	  private List<MatchingFrame> getMatchingFrames(String entityId,String method) {
-		  
-		  List<MatchingFrame> matchingFrames = new ArrayList<MatchingFrame>();
-		 
-		  List<String> fnMatching = JacksonDBAPI.getExperimentalFNAlignment(entityId,method);
+	// inverse of , equivalent of, subproperty of and instance of
+	private static String propertyStructureAttributes = "P1696,P1628,P1647,P31,P279,P1855,P1659,P1629,P1646";
+	// instance of, subclass of
+	private static String itemStructureAttributes = "P31,P279";
 	
-		  
-		  for(String match : fnMatching){
-			  MatchingFrame matchingFrame = new MatchingFrame();
-			  
-			  String frameId = match.split(":")[0];
-			  Frame fullFrame = FrameNetAPI.getFrameFullData(frameId);
-			  
-			  String arg1 = match.split(":")[1].split("#")[0];
-			  String arg2 = match.split(":")[1].split("#")[1];
-				 
-			  matchingFrame.setFrameId(frameId);
-			  matchingFrame.setFrameLabel(fullFrame.getLabel());
-			  matchingFrame.setFrameDescription(fullFrame.getDefinition());
-			  matchingFrame.setArg1(arg1);
-			  matchingFrame.setArg2(arg2);
-			  
-			  //Extract argument descriptions
-			  matchingFrames.add(matchingFrame);
-		  }
-			
-		return matchingFrames;
+	private static final int MAX_SEMANTIC_TYPES = 10;
+	private static Map<String, Integer> arg1SemanticTypes = null; // Semantic types of property arguments
+	private static Map<String, Integer> arg2SemanticTypes = null; // Semantic types of property arguments
+	private static List<MatchingFrame> propMatchingFrames = null; // A set of frames matching a given property
+	private static List<String> availableLanguage = JacksonDBAPI.getWikidataLanguages(); // List of available languages on WD
+	// The main search for
+	public static Form<SearchFormEntity> searchForm = form(SearchFormEntity.class);
+
+	/**
+	 * Visualized WD proeprty according to d3 style
+	 * 
+	 * @param itemId
+	 * @param lang
+	 * @param depth
+	 * @param properties
+	 * @param useInstance
+	 * @return
+	 */
+	public Result getd3TreeProp(String itemId, String lang, int depth,
+			String properties, boolean useInstance) {
+
+		Set<String> targetProperties = new HashSet<String>();
+		String[] propArr = properties.split(",");
+		for (String prop : propArr) {
+			targetProperties.add(prop);
+		}
+		String repsonse = Visualizer.generateTreeForEntity(itemId, depth, lang,
+				targetProperties, useInstance);
+
+		if (repsonse == null) {
+			return ok("No data about: " + itemId);
+		}
+
+		try {
+			FileUtils.writeStringToFile(new File(
+					"public/javascripts/flare.json"), repsonse, "UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return ok(tree.render(repsonse));
 	}
-	  
-	
-	public Result fn(){
-		  return ok(framenet.render());
 
-	  }
-	  public Result visualizeFrameNet(){
-		 
-		  DynamicForm dynamicForm = form().bindFromRequest();
-		  
-		  
-		  String frameId = dynamicForm.get("frameId");
-		  
-		  List<String> matchingFrames = FrameNetAPI.getFrameByLabel(frameId, true);
-		  if(matchingFrames.size()==0){
-			  return ok("No matching frame for your query: " + frameId);
-			  
-		  }
-		  else{
-			  frameId = matchingFrames.get(0);
-		  }
-		  
-		  boolean displayFrameRelations = dynamicForm.get("frameRelation")==null?false:true;
-		  boolean displayFrameLUs = dynamicForm.get("frameLUs")==null?false:true;
-		  boolean displaySemanticArguments = dynamicForm.get("frameSemArguments")==null?false:true;
-		  
-		  if(!displayFrameLUs && !displayFrameRelations && !displaySemanticArguments){
-			  
-			  return ok("Select something to display about the frame, e.g., frame relations or semantic arguments:");
+	/**
+	 * Visualize WD item using d3 style
+	 * 
+	 * @param itemId
+	 * @param lang
+	 * @param depth
+	 * @param useInstance
+	 * @return
+	 */
+	public Result getd3TreeNoProp(String itemId, String lang, int depth,
+			boolean useInstance) {
 
-		  }
-		  
-		  String response = FrameNetAPI.generateVisCode(frameId, displayFrameLUs, displaySemanticArguments, displayFrameRelations);
-		  
-		  
-		  return ok(treeVis.render(response.replace("\"", ""),PROPETY_ARG_TYPES.getId(),PROPETY_ARG_TYPES.getLabel(), PROPETY_ARG_TYPES.getDescription(), PROPETY_ARG_TYPES.getTypeArg1(), PROPETY_ARG_TYPES.getTypeArg2(),propMatchingFrames));
-		  
-	  }
-	  public Result index(){
-		  return ok(submit.render(availableLanguage));
-	  }
-	
-	  
+		String repsonse = Visualizer.generateTreeForEntity(itemId, depth, lang,
+				null, useInstance);
+		if (repsonse == null) {
+			return ok("No data about: " + itemId);
+		}
 
-	  //inverse of , equivalent of, subproperty of and instance of
-	 private static String propertyStructureAttributes = "P1696,P1628,P1647,P31,P279,P1855,P1659,P1629,P1646" ; 
-	 //instance of, subclass of
-	 private static String itemStructureAttributes = "P31,P279" ;
+		try {
+			FileUtils.writeStringToFile(new File(
+					"public/javascripts/flare.json"), repsonse, "UTF-8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return ok(tree.render(repsonse));
+	}
+
+	/**
+	 * Visualize WD item using VIS library
+	 * 
+	 * @param itemId
+	 * @param lang
+	 * @param depth
+	 * @param useInstance
+	 * @return
+	 */
+	public Result getVisTree(String itemId, String lang, int depth,
+			boolean useInstance) {
+
+		String repsonse = Visualizer.generateCodeForVis(itemId, depth, lang,null, useInstance);
+
+		if (repsonse == null) {
+			return ok("No data about: " + itemId);
+		}
+
+		return ok(treeVis.render(repsonse.replace("\"", ""), searchedEntity,arg1SemanticTypes, arg2SemanticTypes, propMatchingFrames));
+	}
+
+	/**
+	 * Visualize WD property using VIS library
+	 * 
+	 * @param itemId
+	 * @param lang
+	 * @param depth
+	 * @param properties
+	 * @param useInstance
+	 * @return
+	 */
+	public Result getVisTreeProp(String itemId, String lang, int depth,String properties, boolean useInstance) {
+
+		Set<String> targetProperties = new HashSet<String>();
+		String[] propArr = properties.split(",");
+		for (String prop : propArr) {
+			targetProperties.add(prop);
+		}
+		String repsonse = Visualizer.generateCodeForVis(itemId, depth, lang,
+				targetProperties, useInstance);
+
+		if (repsonse == null) {
+			return ok("No data about: " + itemId);
+		}
+
+		return ok(treeVis.render(repsonse.replace("\"", ""), searchedEntity,arg1SemanticTypes, arg2SemanticTypes, propMatchingFrames));
+	}
+
 	
+
+	/**
+	 * This method does the actual search
+	 * 
+	 * @return
+	 */
+	public Result searchWikiData() {
+
+		// Get the input values from the search form
+		DynamicForm dynamicForm = form().bindFromRequest();
+
+		String entityId = dynamicForm.get("entityId").toUpperCase().trim();
+		String lang = dynamicForm.get("language").toLowerCase().trim();
+		String depthAsStr = dynamicForm.get("depth").toLowerCase().trim();
+		int depth = 0;
+		if (StringUtils.isNumeric(depthAsStr)) {
+			depth = Integer.valueOf(depthAsStr);
+		} else {
+			return ok("Depth must be a number");
+		}
+
+		String propsStr = getPropertyList(dynamicForm.get("props"));
+		String visMethod = dynamicForm.get("visMethod").toLowerCase().trim();
+
+		boolean useInstance = false;
+
+		if (dynamicForm.get("instance") != null) {
+			useInstance = true;
+			if (entityId.contains("Q")) {
+
+				return ok("You can only use properties when the instance box is checked");
+			}
+
+		}
+
+		// Check if the entity is a valid wikidata item
+		entityId = getEntityId(entityId);
+
+		if (entityId == null) {
+			return ok("Wikidata does not contain such entity [" + entityId
+					+ "]");
+
+		}
+
+		searchedEntity = new WDEntity();
+		searchedEntity.setId(entityId);
+		searchedEntity.setLabel(JacksonDBAPI.getItemLabel(entityId, lang));
+		searchedEntity.setDescription(JacksonDBAPI.getItemDescription(entityId,
+				lang));
+		searchedEntity.setAliases(JacksonDBAPI.getItemAliases(entityId, lang));
+		initPropertyArgsAndFrameMatching(entityId);
+
+		return forwordSeachRequest(entityId, lang, depth, propsStr, visMethod,
+				useInstance);
+
+	}
+
+	/**
+	 * Forward the search request to the right viewer
+	 * 
+	 * @param entityId
+	 * @param lang
+	 * @param depth
+	 * @param propsStr
+	 * @param visMethod
+	 * @param useInstance
+	 * @return
+	 */
+	private Result forwordSeachRequest(String entityId, String lang, int depth,
+			String propsStr, String visMethod, boolean useInstance) {
+		if (propsStr == null || propsStr.equals("") || propsStr.length() <= 1) {
+			if (visMethod.equals("d3")) {
+				return getd3TreeNoProp(entityId, lang, depth, useInstance);
+			}
+
+			else {
+				return getVisTree(entityId, lang, depth, useInstance);
+			}
+
+		} else {
+
+			if (visMethod.equals("d3")) {
+				return getd3TreeProp(entityId, lang, depth, propsStr,
+						useInstance);
+			} else {
+				return getVisTreeProp(entityId, lang, depth, propsStr,
+						useInstance);
+			}
+		}
+	}
+
+	/**
+	 * Initialized the list of argument types and matching frames for a property
+	 * 
+	 * @param entityId
+	 */
+	private void initPropertyArgsAndFrameMatching(String entityId) {
+		if (entityId.startsWith("P")) {
+
+			// Get the experimental argument types
+
+			arg1SemanticTypes = WDFNMAppingDBAPI.getTopNFromMap(
+					WDFNMAppingDBAPI.getPropertyArgumentSemanticTypes(entityId,
+							"ARG1", 1), MAX_SEMANTIC_TYPES, 1);
+			arg2SemanticTypes = WDFNMAppingDBAPI.getTopNFromMap(
+					WDFNMAppingDBAPI.getPropertyArgumentSemanticTypes(entityId,
+							"ARG2", 1), MAX_SEMANTIC_TYPES, 1);
+
+			// Matching Frame
+			propMatchingFrames = WDFNMAppingDBAPI
+					.getExperimentalFNAlignment(entityId);
+
+		}
+	}
+
+	/**
+	 * Get the set of properties that should be considered by the visualization
+	 * 
+	 * @param propsStr
+	 * @return
+	 */
+	private String getPropertyList(String propsStr) {
+		if (propsStr.equals("propStructure")) {
+			propsStr = propertyStructureAttributes;
+		} else if (propsStr.equals("classStructure")) {
+			propsStr = itemStructureAttributes;
+		} else if (propsStr.equals("all")) {
+
+			propsStr = null;
+		}
+		return propsStr;
+	}
+
+	/**
+	 * Check the entered query, it can be either an entity name or an entity
+	 * label
+	 * 
+	 * @param entityId
+	 * @return
+	 */
+	private String getEntityId(String entityId) {
+
+		String res = JacksonDBAPI.getItemLabel(entityId, "en");
+
+		if (res == null) {
+
+			// May be the user entered a label instead of id
+
+			List<String> candidates = JacksonDBAPI.getItemByLable(entityId,
+					"en");
+
+			if (candidates.size() > 0) {
+
+				entityId = candidates.get(0);
+
+				return entityId;
+			} else {
+				return null;
+
+			}
+
+		}
+		return entityId;
+	}
+
+	public Result fn() {
+		return ok(framenet.render());
+
+	}
+
+	public Result visualizeFrameNet() {
+
+		DynamicForm dynamicForm = form().bindFromRequest();
+
+		String frameId = dynamicForm.get("frameId");
+
+//		List<String> matchingFrames = FrameNetXMLAPI.getFrameNetInstance().getFrame(frameId);
+//		
+//		
+//		if (matchingFrames.size() == 0) {
+//			return ok("No matching frame for your query: " + frameId);
+//
+//		} 
+
+		boolean displayFrameRelations = dynamicForm.get("frameRelation") == null ? false
+				: true;
+		boolean displayFrameLUs = dynamicForm.get("frameLUs") == null ? false
+				: true;
+		boolean displaySemanticArguments = dynamicForm.get("frameSemArguments") == null ? false
+				: true;
+
+		if (!displayFrameLUs && !displayFrameRelations	&& !displaySemanticArguments) {
+
+			return ok("Select something to display about the frame, e.g., frame relations or semantic arguments:");
+
+		}
+
+		String response = FrameNetAPI.generateVisualiuationCode(frameId, displayFrameLUs,	displaySemanticArguments, displayFrameRelations);
+
+		return ok(treeVisFrame.render(response.replace("\"", "")));
+
+	}
+
+	public Result index() {
+		return ok(submit.render(availableLanguage));
+	}
+
+
 }

@@ -1,4 +1,8 @@
-@(code : String, id:String, label:String, desc: String, arg1:String, arg2:String, matchingFrame: List[models.MatchingFrame]) 
+@(code : String, 
+searchedEntity:models.WDEntity,
+arg1Types:Map[String,Integer], 
+arg2Types:Map[String,Integer],
+matchingFrame: List[models.MatchingFrame]) 
 
 	<!doctype html>
 	<html>
@@ -150,33 +154,27 @@ arrows: {to : true },
 	</div>
 	
 	<hr>
+	@if(searchedEntity.getId().contains("P")){
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span3">
 				<div class="panel-group" id="accordion">
 					<div class="panel panel-default">
 						<div class="panel-heading">
+								<a data-toggle="collapse" href="#collapse1">Wikidata Property: <a href="https://www.wikidata.org/wiki/Property:@searchedEntity.getId()" target = "_blank" title="@searchedEntity.getLabel()" data-toggle="popover" data-trigger="hover" data-content="@searchedEntity.getDescription()">@searchedEntity.getLabel()</a>
 							<h4 class="panel-title">
-								<a data-toggle="collapse" href="#collapse1">Wikidata Property: <a href="https://www.wikidata.org/wiki/Property:@id" target = "_blank" title="@label" data-toggle="popover" data-trigger="hover" data-content="@desc">@label</a></a>
 							</h4>
 						</div>
 						<div id="collapse1" class="panel-collapse collapse in">
 							<dl class="dl-vertical">
-								<!-- 
-								<dt><h5>Label</h5></dt>
-								<dd><a href="https://www.wikidata.org/wiki/Property:@id" target = "_blank" title="@label" data-toggle="popover" data-trigger="hover" data-content="@desc">@label</a></dd>
-								<dt><h5>Description</h5></dt>
-								<dd><p><em>@desc</em></p></dd>
-								-->
+							
 								
-								<dt><h5>ARG1 Types</h5></dt>
-								@if(arg1!=null){
-									<dd><p> @Html(arg1.replace("{","").replace("}","").replace("], ","]<br>"))</p></dd>
-								}
-								<dt><h5>ARG2 Types</h5></dt>
-								@if(arg2!=null){
-									<dd><p>@Html( arg2.replace("{","").replace("}","").replace("], ","]<br>"))</p></dd>
-								}
+								<dt><h5>ARG1 Semantic Types</h5></dt>
+								<dd><p>@Html(arg1Types.keySet().toString())</p></dd>
+								
+								<dt><h5>ARG2 Semantic Types</h5></dt>
+								<dd><p>@Html(arg2Types.keySet().toString())</p></dd>
+								
 							</dl>
 						</div>
 					</div>
@@ -184,41 +182,49 @@ arrows: {to : true },
 				
 				
 				@for(f <- matchingFrame) {
-				
+					
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-								<a data-toggle="collapse" href="#collapse@f.getFrameId()">Matching Frame: <a href="https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex" target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getFrameDescription().substring(0,f.getFrameDescription().indexOf("."))"> @f.getFrameLabel()</a> </a>
+								<a data-toggle="collapse" href="#collapse@f.getFrameId()">Matching Frame: <a href=https://framenet2.icsi.berkeley.edu/fnReports/data/frame/@Html(f.getFrameLabel())@Html(".xml") target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getFrameDescription()"> @f.getFrameLabel()</a> </a>
 							</h4>
 						</div>
 						<div id="collapse@f.getFrameId()" class="panel-collapse collapse">
 							<dl class="dl-vertical">
-								<!--
-								<dt><h5>Label</h5></dt>
-								<dd><a href="https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex" target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getFrameDescription().substring(0,f.getFrameDescription().indexOf("."))"> @f.getFrameLabel()</a></dd>
-								<dt><h5>Definition</h5></dt>
-								<dd><p><em>@f.getFrameDescription().substring(0,f.getFrameDescription().indexOf("."))...</em></p></dd>
-								-->
+								
 								<dt><h5>Proeprty ARG1: best matching FEs</h5></dt>
+								<dd><a href=https://framenet2.icsi.berkeley.edu/fnReports/data/frame/@Html(f.getFrameLabel())@Html(".xml") target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getArg1Description()"> @Html(f.getArg1())</a></dd>
 								
-								@for(a <- f.getArg1().replace("[","").replace("]","").split(",") ){
+								<dt><h5>Proeprty ARG2: best matching FEs</h5></dt>							
+								<dd><a href=https://framenet2.icsi.berkeley.edu/fnReports/data/frame/@Html(f.getFrameLabel())@Html(".xml") target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getArg2Description()"> @Html(f.getArg2())</a></dd>
 								
-									<dd><a href="https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex" target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getRoleDescription(a)"> @Html(a)</a></dd>
 								
-								}
-								
-								<dt><h5>Proeprty ARG2: best matching FEs</h5></dt>
-								@for(a <- f.getArg2().replace("[","").replace("]","").split(",") ){
-								
-									<dd><a href="https://framenet.icsi.berkeley.edu/fndrupal/index.php?q=frameIndex" target = "_blank" title="Definition" data-toggle="popover" data-trigger="hover" data-content="@f.getRoleDescription(a)"> @Html(a)</a></dd>
-								
-								}
-								
-							<dl>	
+							</dl>	
 						</div>
 					</div>
 				}	
 			</div>
+			}
+			@if(searchedEntity.getId().contains("Q")){
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="span8">
+						<div class="panel-heading">
+						<h4 class="panel-title">
+							Wikidata Item:  <a href="https://www.wikidata.org/wiki/@searchedEntity.getId()" target = "_blank" title="@searchedEntity.getLabel()" data-toggle="popover" data-trigger="hover" data-content="@searchedEntity.getDescription()">@searchedEntity.getLabel()</a>
+						</h4>
+							<div id="collapse22" class="panel-collapse collapse in">
+								<dl class="dl-vertical">
+									<dd><p><strong>Description: </strong>@Html(searchedEntity.getDescription())</p></dd>
+									<dd><p><strong>Aliases: </strong>@Html(searchedEntity.getAliases().toString())</p></dd>
+								</dl>	
+							</div>			
+						</div>
+						</div>
+					</div>
+				</div>	
+				<hr>	
+			}
 			<div class="span8">
 				<div class = "jumbotron" id="mynetwork"></div>
 			</div>
@@ -226,6 +232,7 @@ arrows: {to : true },
 	
 		
 	</div>
+	
 	
 	</body>
 </html>
